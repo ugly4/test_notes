@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.add_note) {
 
-            // Going from MainActivity to NotesEditorActivity
             Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);
             startActivity(intent);
             return true;
