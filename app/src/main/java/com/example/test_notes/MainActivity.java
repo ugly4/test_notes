@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     static ArrayList<String> notes = new ArrayList<>();
     static ArrayAdapter arrayAdapter;
-
+    static ListAdapter myAdapter;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -62,9 +62,10 @@ public class MainActivity extends AppCompatActivity {
             notes = new ArrayList(set);
         }
 
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, notes);
+        //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, notes);
+        myAdapter = new ListAdapter(this, notes);
 
-        listView.setAdapter(arrayAdapter);
+        listView.setAdapter(myAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 notes.remove(itemToDelete);
-                                arrayAdapter.notifyDataSetChanged();
+                                myAdapter.notifyDataSetChanged();
                                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
                                 HashSet<String> set = new HashSet(MainActivity.notes);
                                 sharedPreferences.edit().putStringSet("notes", set).apply();
