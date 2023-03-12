@@ -16,11 +16,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
-    static ArrayList<String> notes = new ArrayList<>();
+    //static ArrayList<String> notes = new ArrayList<>();
+    static ArrayList<NoteClass> notes = new ArrayList<>();
     static ArrayAdapter arrayAdapter;
     static ListAdapter myAdapter;
     @Override
@@ -52,14 +54,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ListView listView = findViewById(R.id.listView);
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-        HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.test_notes", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        HashSet<String> setNotes = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
+        HashSet<String> setDates = (HashSet<String>) sharedPreferences.getStringSet("dates", null);
 
-        if (set == null) {
 
-            notes.add("Начальная заметка");
+        if (setNotes == null || setDates == null) {
+
+            notes.add(new NoteClass("Начальная заметка", String.valueOf(Calendar.getInstance().getTime())));
         } else {
-            notes = new ArrayList(set);
+            ArrayList<String> listNotes = new ArrayList<>(setNotes);
+            ArrayList<String> listDates = new ArrayList<>(setDates);
+            notes = new ArrayList<>();
+            for (int i = 0; i < setNotes.size(); i++){
+                notes.add(new NoteClass(listNotes.get(i), listDates.get(i)));
+            }
         }
 
         //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, notes);
@@ -91,9 +101,17 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 notes.remove(itemToDelete);
                                 myAdapter.notifyDataSetChanged();
-                                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                                HashSet<String> set = new HashSet(MainActivity.notes);
-                                sharedPreferences.edit().putStringSet("notes", set).apply();
+                                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.test_notes", Context.MODE_PRIVATE);
+                                ArrayList<String> listNotes = new ArrayList<>();
+                                ArrayList<String> listDates = new ArrayList<>();
+                                for (int j = 0; i < MainActivity.notes.size(); i++){
+                                    listNotes.add(MainActivity.notes.get(j).getData());
+                                    listDates.add(MainActivity.notes.get(j).getDate());
+                                }
+                                HashSet<String> setNotes = new HashSet(listNotes);
+                                HashSet<String> setDates = new HashSet(listDates);
+                                sharedPreferences.edit().putStringSet("notes", setNotes).apply();
+                                sharedPreferences.edit().putStringSet("dates", setDates).apply();
                             }
                         }).setNegativeButton("No", null).show();
                 return true;

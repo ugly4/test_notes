@@ -8,14 +8,16 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class ListAdapter extends BaseAdapter {
 
     private LayoutInflater LInflater;
-    private ArrayList<String> list;
+    private ArrayList<NoteClass> list;
 
-    public ListAdapter(Context context, ArrayList<String> data){
+    public ListAdapter(Context context, ArrayList<NoteClass> data){
 
         list = data;
         LInflater = (LayoutInflater) context
@@ -46,22 +48,25 @@ public class ListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             v = LInflater.inflate(R.layout.list_item, viewGroup, false);
             holder.text = (TextView) v.findViewById(R.id.note_text);
+            holder.date = (TextView) v.findViewById(R.id.note_date);
             v.setTag(holder);
         }
 
         holder = (ViewHolder) v.getTag();
-        String data = getData(i);
+        NoteClass data = getData(i);
 
-        holder.text.setText(data);
+        holder.text.setText(data.getData());
+        holder.date.setText(data.getDate());
 
         return v;
     }
 
-    String getData(int position){
-        return (String) getItem(position);
+    NoteClass getData(int position){
+        return (NoteClass) getItem(position);
     }
 
     private static class ViewHolder {
         private TextView text;
+        private TextView date;
     }
 }
