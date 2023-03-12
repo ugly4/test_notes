@@ -54,16 +54,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ListView listView = findViewById(R.id.listView);
+        //получаем сохранённые значения
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.test_notes", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
         HashSet<String> setNotes = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
         HashSet<String> setDates = (HashSet<String>) sharedPreferences.getStringSet("dates", null);
 
 
         if (setNotes == null || setDates == null) {
-
+            //создаём начанальную заметку при первом запуске приложения
             notes.add(new NoteClass("Начальная заметка", String.valueOf(Calendar.getInstance().getTime())));
         } else {
+            //инициализируем сохранённые заметки
             ArrayList<String> listNotes = new ArrayList<>(setNotes);
             ArrayList<String> listDates = new ArrayList<>(setDates);
             notes = new ArrayList<>();
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                //открываем окно редактирования заметки
                 Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);
                 intent.putExtra("noteId", i);
                 startActivity(intent);
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //при долгом нажатии на заметку можем её удалить
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -99,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                //обновляем и сохраняем список заметок
                                 notes.remove(itemToDelete);
                                 myAdapter.notifyDataSetChanged();
                                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.test_notes", Context.MODE_PRIVATE);

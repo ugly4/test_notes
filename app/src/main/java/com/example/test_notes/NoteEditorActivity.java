@@ -28,9 +28,10 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         noteId = intent.getIntExtra("noteId", -1);
         if (noteId != -1) {
+            //выводим текст из созданной ранее заметки
             editText.setText(MainActivity.notes.get(noteId).getData());
         } else {
-
+            //создаём новую пустую заметку
             MainActivity.notes.add(new NoteClass("",String.valueOf(Calendar.getInstance().getTime())));
             noteId = MainActivity.notes.size() - 1;
             MainActivity.myAdapter.notifyDataSetChanged();
@@ -42,6 +43,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
 
+            //при написании текста мы обновляем и сохраняем наш объект "заметок"
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 MainActivity.notes.set(noteId, new NoteClass (String.valueOf(charSequence), String.valueOf(Calendar.getInstance().getTime() )));

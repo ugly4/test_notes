@@ -1,6 +1,7 @@
 package com.example.test_notes;
 
 public class NoteClass {
+    //Класс "заметок", который хранит текст и дату создания/редактирования
     private String data;
     private String date;
 
